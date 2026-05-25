@@ -6,143 +6,196 @@
 <title>mGuru — Bulk Email Tool</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root {
-    --ink: #0e0e0e; --paper: #f5f2eb; --paper2: #edeae0;
-    --accent: #e8472a; --gold: #c9a84c; --muted: #7a7668;
-    --border: #d4d0c4; --green: #2d6a4f; --green-bg: #e8f5ee; --radius: 4px;
-  }
-  body { font-family: 'DM Mono', monospace; background: var(--paper); color: var(--ink); min-height: 100vh; font-size: 13px; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#0e0e0e;--paper:#f5f2eb;--paper2:#edeae0;
+  --accent:#e8472a;--blue:#2563eb;--gold:#c9a84c;
+  --muted:#7a7668;--border:#d4d0c4;
+  --green:#2d6a4f;--green-bg:#e8f5ee;--radius:4px;
+}
+body{font-family:'DM Mono',monospace;background:var(--paper);color:var(--ink);min-height:100vh;font-size:13px;}
 
-  .topbar { display:flex; align-items:center; justify-content:space-between; padding:0 32px; height:56px; background:var(--ink); position:sticky; top:0; z-index:100; }
-  .logo { font-family:'Syne',sans-serif; font-weight:800; font-size:22px; color:var(--paper); letter-spacing:-0.5px; display:flex; align-items:center; gap:8px; }
-  .logo span { color:var(--accent); }
-  .logo-badge { font-family:'DM Mono',monospace; font-size:9px; font-weight:500; background:var(--accent); color:#fff; padding:2px 6px; border-radius:2px; letter-spacing:1px; text-transform:uppercase; }
-  .nav-pills { display:flex; gap:4px; }
-  .nav-pill { font-family:'DM Mono',monospace; font-size:11px; color:#aaa; padding:6px 14px; border-radius:2px; cursor:pointer; border:none; background:transparent; transition:all 0.15s; letter-spacing:0.5px; }
-  .nav-pill:hover { color:var(--paper); background:#1e1e1e; }
-  .nav-pill.active { color:var(--ink); background:var(--paper); }
+/* TOPBAR */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:54px;background:var(--ink);position:sticky;top:0;z-index:100;}
+.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:20px;color:var(--paper);letter-spacing:-0.5px;display:flex;align-items:center;gap:8px;}
+.logo span{color:var(--accent);}
+.logo-badge{font-size:9px;background:var(--accent);color:#fff;padding:2px 6px;border-radius:2px;letter-spacing:1px;text-transform:uppercase;}
+.nav-pills{display:flex;gap:4px;}
+.nav-pill{font-family:'DM Mono',monospace;font-size:11px;color:#aaa;padding:6px 13px;border-radius:2px;cursor:pointer;border:none;background:transparent;transition:all 0.15s;}
+.nav-pill:hover{color:var(--paper);background:#1e1e1e;}
+.nav-pill.active{color:var(--ink);background:var(--paper);}
 
-  .app-layout { display:grid; grid-template-columns:260px 1fr; min-height:calc(100vh - 56px); }
-  .sidebar { background:var(--ink); color:var(--paper); padding:24px 0; }
-  .sidebar-section-label { font-size:9px; letter-spacing:2px; text-transform:uppercase; color:#555; padding:0 20px; margin:20px 0 8px; }
-  .sidebar-item { display:flex; align-items:center; gap:10px; padding:9px 20px; cursor:pointer; color:#888; font-size:12px; transition:all 0.1s; border-left:2px solid transparent; }
-  .sidebar-item:hover { color:var(--paper); background:#161616; }
-  .sidebar-item.active { color:var(--paper); border-left-color:var(--accent); background:#161616; }
-  .sidebar-item .dot { width:6px; height:6px; border-radius:50%; background:#444; flex-shrink:0; }
-  .sidebar-item.active .dot { background:var(--accent); }
-  .sidebar-count { margin-left:auto; font-size:10px; background:#1e1e1e; padding:1px 7px; border-radius:10px; color:#666; }
-  .sidebar-item.active .sidebar-count { background:var(--accent); color:#fff; }
+/* MODE SWITCHER in topbar */
+.mode-switcher{display:flex;align-items:center;gap:6px;background:#1a1a1a;border-radius:3px;padding:3px;}
+.mode-btn{font-family:'DM Mono',monospace;font-size:10px;padding:5px 12px;border-radius:2px;cursor:pointer;border:none;background:transparent;color:#888;transition:all 0.15s;letter-spacing:0.5px;}
+.mode-btn.active-job{background:#2563eb;color:#fff;}
+.mode-btn.active-marketing{background:var(--accent);color:#fff;}
 
-  .main { padding:32px; overflow-y:auto; }
-  .page { display:none; }
-  .page.active { display:block; }
+/* LAYOUT */
+.app-layout{display:grid;grid-template-columns:240px 1fr;min-height:calc(100vh - 54px);}
+.sidebar{background:var(--ink);color:var(--paper);padding:20px 0;}
+.sidebar-section-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#555;padding:0 18px;margin:18px 0 6px;}
+.sidebar-item{display:flex;align-items:center;gap:10px;padding:8px 18px;cursor:pointer;color:#888;font-size:11px;transition:all 0.1s;border-left:2px solid transparent;}
+.sidebar-item:hover{color:var(--paper);background:#161616;}
+.sidebar-item.active{color:var(--paper);border-left-color:var(--accent);background:#161616;}
+.sidebar-item.active.job-mode{border-left-color:var(--blue);}
+.dot{width:6px;height:6px;border-radius:50%;background:#444;flex-shrink:0;}
+.sidebar-item.active .dot{background:var(--accent);}
+.sidebar-item.active.job-mode .dot{background:var(--blue);}
+.sidebar-count{margin-left:auto;font-size:10px;background:#1e1e1e;padding:1px 6px;border-radius:10px;color:#666;}
+.sidebar-item.active .sidebar-count{background:var(--accent);color:#fff;}
+.sidebar-item.active.job-mode .sidebar-count{background:var(--blue);color:#fff;}
 
-  .page-header { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:28px; }
-  .page-title { font-family:'Syne',sans-serif; font-size:26px; font-weight:700; letter-spacing:-0.5px; line-height:1.1; }
-  .page-subtitle { color:var(--muted); margin-top:4px; font-size:12px; }
+/* MODE BANNER */
+.mode-banner{border-radius:var(--radius);padding:10px 18px;margin-bottom:20px;font-size:11px;display:flex;align-items:center;gap:10px;}
+.mode-banner.job{background:#eff6ff;border:1px solid #bfdbfe;color:#1e40af;}
+.mode-banner.marketing{background:#fff1f0;border:1px solid #fecaca;color:#991b1b;}
+.mode-banner strong{font-size:12px;}
 
-  .stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:28px; }
-  .stat-card { background:var(--ink); color:var(--paper); padding:18px 20px; border-radius:var(--radius); position:relative; overflow:hidden; }
-  .stat-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:var(--accent); }
-  .stat-card.gold::before { background:var(--gold); }
-  .stat-card.blue::before { background:#4a9eff; }
-  .stat-card.purple::before { background:#9b5de5; }
-  .stat-label { font-size:9px; letter-spacing:2px; text-transform:uppercase; color:#888; margin-bottom:8px; }
-  .stat-value { font-family:'Syne',sans-serif; font-size:28px; font-weight:700; line-height:1; }
-  .stat-change { font-size:10px; color:var(--gold); margin-top:4px; }
+/* MAIN */
+.main{padding:28px;overflow-y:auto;}
+.page{display:none;}
+.page.active{display:block;}
+.page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px;}
+.page-title{font-family:'Syne',sans-serif;font-size:24px;font-weight:700;letter-spacing:-0.5px;line-height:1.1;}
+.page-subtitle{color:var(--muted);margin-top:4px;font-size:11px;}
 
-  .table-card { background:#fff; border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; }
-  .table-header { display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-bottom:1px solid var(--border); background:var(--paper2); }
-  .table-title { font-family:'Syne',sans-serif; font-size:14px; font-weight:600; }
-  table { width:100%; border-collapse:collapse; }
-  th { text-align:left; padding:10px 20px; font-size:9px; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); background:var(--paper2); border-bottom:1px solid var(--border); font-weight:500; }
-  td { padding:12px 20px; border-bottom:1px solid #f0ede4; font-size:12px; vertical-align:middle; }
-  tr:last-child td { border-bottom:none; }
-  tr:hover td { background:#faf8f3; }
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px;}
+.stat-card{background:var(--ink);color:var(--paper);padding:16px 18px;border-radius:var(--radius);position:relative;overflow:hidden;}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent);}
+.stat-card.gold::before{background:var(--gold);}
+.stat-card.blue::before{background:#4a9eff;}
+.stat-card.purple::before{background:#9b5de5;}
+.stat-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#888;margin-bottom:6px;}
+.stat-value{font-family:'Syne',sans-serif;font-size:26px;font-weight:700;line-height:1;}
+.stat-change{font-size:10px;color:var(--gold);margin-top:4px;}
 
-  .badge { display:inline-block; font-size:9px; letter-spacing:1px; text-transform:uppercase; padding:3px 8px; border-radius:2px; font-weight:500; }
-  .badge-sent { background:var(--green-bg); color:var(--green); }
-  .badge-draft { background:#f0ede4; color:var(--muted); }
-  .badge-scheduled { background:#fef3e2; color:#b45309; }
-  .badge-failed { background:#fde8e8; color:#c0392b; }
+/* TABLE */
+.table-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:20px;}
+.table-header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border);background:var(--paper2);}
+.table-title{font-family:'Syne',sans-serif;font-size:13px;font-weight:600;}
+table{width:100%;border-collapse:collapse;}
+th{text-align:left;padding:9px 16px;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);background:var(--paper2);border-bottom:1px solid var(--border);font-weight:500;}
+td{padding:10px 16px;border-bottom:1px solid #f0ede4;font-size:12px;vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:#faf8f3;}
 
-  .progress-bar { height:4px; background:var(--border); border-radius:2px; overflow:hidden; width:80px; }
-  .progress-fill { height:100%; background:var(--accent); border-radius:2px; }
+/* BADGES */
+.badge{display:inline-block;font-size:9px;letter-spacing:1px;text-transform:uppercase;padding:2px 7px;border-radius:2px;font-weight:500;}
+.badge-sent{background:var(--green-bg);color:var(--green);}
+.badge-draft{background:#f0ede4;color:var(--muted);}
+.badge-job{background:#eff6ff;color:#1d4ed8;}
+.badge-marketing{background:#fff1f0;color:#dc2626;}
 
-  .btn { font-family:'DM Mono',monospace; font-size:11px; font-weight:500; padding:9px 18px; border-radius:var(--radius); cursor:pointer; border:none; transition:all 0.15s; letter-spacing:0.5px; text-transform:uppercase; }
-  .btn-primary { background:var(--accent); color:#fff; }
-  .btn-primary:hover { background:#d13a1e; }
-  .btn-primary:disabled { background:#aaa; cursor:not-allowed; }
-  .btn-secondary { background:transparent; color:var(--ink); border:1px solid var(--border); }
-  .btn-secondary:hover { background:var(--paper2); }
-  .btn-ghost { background:transparent; color:var(--muted); border:1px solid transparent; font-size:10px; }
-  .btn-ghost:hover { color:var(--ink); border-color:var(--border); }
+/* PROGRESS */
+.progress-bar{height:4px;background:var(--border);border-radius:2px;overflow:hidden;width:80px;}
+.progress-fill{height:100%;background:var(--accent);border-radius:2px;}
 
-  .compose-grid { display:grid; grid-template-columns:1fr 360px; gap:20px; align-items:start; }
-  .form-card { background:#fff; border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; margin-bottom:16px; }
-  .form-card-header { padding:14px 20px; background:var(--paper2); border-bottom:1px solid var(--border); font-family:'Syne',sans-serif; font-size:13px; font-weight:600; display:flex; align-items:center; gap:8px; }
-  .form-card-body { padding:20px; }
+/* BUTTONS */
+.btn{font-family:'DM Mono',monospace;font-size:10px;font-weight:500;padding:8px 16px;border-radius:var(--radius);cursor:pointer;border:none;transition:all 0.15s;letter-spacing:0.5px;text-transform:uppercase;}
+.btn-primary{background:var(--accent);color:#fff;}
+.btn-primary:hover{background:#d13a1e;}
+.btn-primary.job{background:var(--blue);}
+.btn-primary.job:hover{background:#1d4ed8;}
+.btn-secondary{background:transparent;color:var(--ink);border:1px solid var(--border);}
+.btn-secondary:hover{background:var(--paper2);}
+.btn-ghost{background:transparent;color:var(--muted);border:1px solid transparent;font-size:10px;}
+.btn-ghost:hover{color:var(--ink);border-color:var(--border);}
+.btn-danger{background:transparent;color:#dc2626;border:1px solid #fecaca;font-size:10px;}
+.btn-danger:hover{background:#fff1f0;}
 
-  label { display:block; font-size:9px; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); margin-bottom:6px; font-weight:500; }
-  input[type="text"], input[type="email"], textarea, select { width:100%; font-family:'DM Mono',monospace; font-size:12px; padding:10px 12px; border:1px solid var(--border); border-radius:var(--radius); background:var(--paper); color:var(--ink); outline:none; transition:border-color 0.15s; margin-bottom:16px; }
-  input:focus, textarea:focus, select:focus { border-color:var(--accent); }
-  textarea { resize:vertical; min-height:120px; }
-  .field-group { margin-bottom:16px; }
-  .field-group input, .field-group textarea, .field-group select { margin-bottom:0; }
+/* FORMS */
+.form-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:14px;}
+.form-card-header{padding:12px 18px;background:var(--paper2);border-bottom:1px solid var(--border);font-family:'Syne',sans-serif;font-size:13px;font-weight:600;display:flex;align-items:center;gap:8px;}
+.form-card-body{padding:18px;}
+label{display:block;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:5px;font-weight:500;}
+input[type="text"],input[type="email"],textarea,select{width:100%;font-family:'DM Mono',monospace;font-size:12px;padding:9px 11px;border:1px solid var(--border);border-radius:var(--radius);background:var(--paper);color:var(--ink);outline:none;transition:border-color 0.15s;margin-bottom:14px;}
+input:focus,textarea:focus,select:focus{border-color:var(--accent);}
+.job-mode-active input:focus,.job-mode-active textarea:focus,.job-mode-active select:focus{border-color:var(--blue);}
+textarea{resize:vertical;min-height:110px;}
+.field-group{margin-bottom:14px;}
+.field-group input,.field-group textarea,.field-group select{margin-bottom:0;}
 
-  .tag-row { display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
-  .tag { font-size:10px; background:var(--ink); color:var(--paper); padding:3px 10px; border-radius:2px; cursor:pointer; transition:background 0.1s; }
-  .tag:hover { background:var(--accent); }
+/* TAGS */
+.tag-row{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px;}
+.tag{font-size:10px;background:var(--ink);color:var(--paper);padding:2px 9px;border-radius:2px;cursor:pointer;transition:background 0.1s;}
+.tag:hover{background:var(--accent);}
 
-  .upload-zone { border:2px dashed var(--border); border-radius:var(--radius); padding:40px; text-align:center; cursor:pointer; transition:all 0.2s; margin-bottom:20px; background:#fff; }
-  .upload-zone:hover, .upload-zone.dragging { border-color:var(--accent); background:#fff8f7; }
-  .upload-icon { font-size:32px; margin-bottom:12px; }
-  .upload-title { font-family:'Syne',sans-serif; font-size:16px; font-weight:600; margin-bottom:6px; }
-  .upload-sub { color:var(--muted); font-size:11px; }
+/* COMPOSE GRID */
+.compose-grid{display:grid;grid-template-columns:1fr 340px;gap:16px;align-items:start;}
 
-  .modal-overlay { display:none; position:fixed; inset:0; background:rgba(14,14,14,0.7); z-index:200; align-items:center; justify-content:center; }
-  .modal-overlay.open { display:flex; }
-  .modal { background:var(--paper); border-radius:var(--radius); width:500px; overflow:hidden; animation:slideUp 0.2s ease; }
-  @keyframes slideUp { from { transform:translateY(20px); opacity:0; } to { transform:translateY(0); opacity:1; } }
-  .modal-header { background:var(--ink); color:var(--paper); padding:18px 24px; display:flex; align-items:center; justify-content:space-between; }
-  .modal-title { font-family:'Syne',sans-serif; font-size:16px; font-weight:700; }
-  .modal-close { background:none; border:none; color:#888; font-size:20px; cursor:pointer; padding:0; line-height:1; }
-  .modal-body { padding:24px; }
-  .modal-footer { padding:16px 24px; border-top:1px solid var(--border); display:flex; justify-content:flex-end; gap:10px; }
+/* TEMPLATE TABS */
+.template-tabs{display:flex;gap:6px;margin-bottom:16px;}
+.template-tab{font-family:'DM Mono',monospace;font-size:10px;padding:7px 16px;border-radius:var(--radius);cursor:pointer;border:1px solid var(--border);background:var(--paper2);color:var(--muted);transition:all 0.15s;}
+.template-tab.active-job{background:#eff6ff;border-color:#bfdbfe;color:#1d4ed8;}
+.template-tab.active-marketing{background:#fff1f0;border-color:#fecaca;color:#dc2626;}
 
-  .progress-track { height:8px; background:var(--border); border-radius:4px; overflow:hidden; margin:16px 0; }
-  .progress-track-fill { height:100%; background:linear-gradient(90deg,var(--accent),var(--gold)); border-radius:4px; transition:width 0.4s ease; }
-  .send-log { background:var(--ink); color:#0f0; font-family:'DM Mono',monospace; font-size:10px; padding:14px; border-radius:var(--radius); height:140px; overflow-y:auto; line-height:1.8; }
-  @keyframes fadeIn { to { opacity:1; } }
-  .log-line { opacity:0; animation:fadeIn 0.2s forwards; }
+/* CONTACTS PAGE */
+.upload-zone{border:2px dashed var(--border);border-radius:var(--radius);padding:32px;text-align:center;cursor:pointer;transition:all 0.2s;margin-bottom:16px;background:#fff;}
+.upload-zone:hover,.upload-zone.dragging{border-color:var(--accent);background:#fff8f7;}
+.upload-icon{font-size:28px;margin-bottom:10px;}
+.upload-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:600;margin-bottom:4px;}
+.upload-sub{color:var(--muted);font-size:11px;}
 
-  .search-input { font-family:'DM Mono',monospace; font-size:12px; padding:9px 14px; border:1px solid var(--border); border-radius:var(--radius); background:#fff; color:var(--ink); outline:none; margin:0; }
-  .search-input:focus { border-color:var(--accent); }
+/* INLINE EDIT */
+.editable-cell{cursor:pointer;border-radius:2px;padding:2px 4px;transition:background 0.1s;}
+.editable-cell:hover{background:#f0ede4;}
+.editable-cell input{font-family:'DM Mono',monospace;font-size:11px;padding:3px 6px;border:1px solid var(--accent);border-radius:2px;background:#fff;width:100%;min-width:80px;outline:none;margin:0;}
 
-  .action-row { display:flex; align-items:center; gap:10px; }
+/* ADD CONTACT FORM */
+.add-contact-row{background:#f0f7ff;border:1px solid #bfdbfe;border-radius:var(--radius);padding:14px 16px;margin-bottom:14px;display:none;}
+.add-contact-row.open{display:block;}
+.add-contact-grid{display:grid;grid-template-columns:repeat(6,1fr) auto;gap:8px;align-items:end;}
+.add-contact-grid input{margin-bottom:0;font-size:11px;padding:7px 9px;}
+.add-contact-grid label{font-size:8px;}
 
-  .welcome-banner { background:var(--ink); color:var(--paper); border-radius:var(--radius); padding:24px 28px; margin-bottom:24px; display:flex; align-items:center; justify-content:space-between; }
-  .welcome-title { font-family:'Syne',sans-serif; font-size:18px; font-weight:700; margin-bottom:4px; }
-  .welcome-sub { color:#888; font-size:11px; }
-  .accent-line { width:3px; height:40px; background:var(--accent); border-radius:2px; margin-right:20px; flex-shrink:0; }
-  .welcome-left { display:flex; align-items:center; }
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(14,14,14,0.7);z-index:200;align-items:center;justify-content:center;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--paper);border-radius:var(--radius);width:480px;overflow:hidden;animation:slideUp 0.2s ease;}
+@keyframes slideUp{from{transform:translateY(20px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+.modal-header{background:var(--ink);color:var(--paper);padding:16px 22px;display:flex;align-items:center;justify-content:space-between;}
+.modal-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;}
+.modal-close{background:none;border:none;color:#888;font-size:20px;cursor:pointer;padding:0;line-height:1;}
+.modal-body{padding:22px;}
+.modal-footer{padding:14px 22px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px;}
 
-  /* API config banner */
-  .api-banner { background:#fef3e2; border:1px solid #fde68a; border-radius:var(--radius); padding:14px 18px; margin-bottom:20px; display:flex; align-items:center; justify-content:space-between; font-size:11px; color:#92400e; }
-  .api-banner a { color:var(--accent); text-decoration:none; font-weight:500; }
-  .api-banner.connected { background:var(--green-bg); border-color:#6fcf97; color:var(--green); }
+/* SEND LOG */
+.progress-track{height:7px;background:var(--border);border-radius:4px;overflow:hidden;margin:14px 0;}
+.progress-track-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--gold));border-radius:4px;transition:width 0.4s ease;}
+.send-log{background:var(--ink);color:#0f0;font-family:'DM Mono',monospace;font-size:10px;padding:12px;border-radius:var(--radius);height:130px;overflow-y:auto;line-height:1.8;}
+@keyframes fadeIn{to{opacity:1;}}
+.log-line{opacity:0;animation:fadeIn 0.2s forwards;}
 
-  .info-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; background:var(--paper2); border-radius:var(--radius); padding:14px; margin-bottom:16px; font-size:11px; }
-  .info-row { display:flex; justify-content:space-between; }
+/* ACTION ROW */
+.action-row{display:flex;align-items:center;gap:8px;}
 
-  .spinner { display:inline-block; width:12px; height:12px; border:2px solid #fff3; border-top-color:#fff; border-radius:50%; animation:spin 0.7s linear infinite; vertical-align:middle; margin-right:6px; }
-  @keyframes spin { to { transform:rotate(360deg); } }
+/* WELCOME BANNER */
+.welcome-banner{border-radius:var(--radius);padding:20px 24px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;}
+.welcome-banner.job{background:#1e3a5f;color:#fff;}
+.welcome-banner.marketing{background:var(--ink);color:var(--paper);}
+.welcome-title{font-family:'Syne',sans-serif;font-size:17px;font-weight:700;margin-bottom:3px;}
+.welcome-sub{color:#aaa;font-size:11px;}
+.accent-line{width:3px;height:36px;border-radius:2px;margin-right:16px;flex-shrink:0;}
+.welcome-left{display:flex;align-items:center;}
+
+/* API BANNER */
+.api-banner{background:#fef3e2;border:1px solid #fde68a;border-radius:var(--radius);padding:12px 16px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;font-size:11px;color:#92400e;}
+.api-banner.connected{background:var(--green-bg);border-color:#6fcf97;color:var(--green);}
+
+/* INFO GRID */
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;background:var(--paper2);border-radius:var(--radius);padding:12px;margin-bottom:14px;}
+.info-row{display:flex;justify-content:space-between;font-size:11px;}
+
+/* SEARCH */
+.search-input{font-family:'DM Mono',monospace;font-size:11px;padding:8px 12px;border:1px solid var(--border);border-radius:var(--radius);background:#fff;color:var(--ink);outline:none;margin:0;}
+.search-input:focus{border-color:var(--accent);}
 </style>
 </head>
 <body>
 
-<!-- ── TOPBAR ─────────────────────────────────────────────────────────────── -->
+<!-- TOPBAR -->
 <div class="topbar">
   <div class="logo">m<span>Guru</span> <span class="logo-badge">Beta</span></div>
   <div class="nav-pills">
@@ -151,91 +204,117 @@
     <button class="nav-pill" onclick="switchNav(this,'contacts')">Contacts</button>
     <button class="nav-pill" onclick="switchNav(this,'settings')">Settings</button>
   </div>
-  <div style="display:flex;gap:8px;align-items:center;">
-    <span id="api-status-dot" style="font-size:10px;color:#888;">⬤ not configured</span>
-    <div style="width:30px;height:30px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:#fff;">M</div>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <div class="mode-switcher">
+      <button class="mode-btn active-job" id="btn-job" onclick="setMode('job')">💼 Job Search</button>
+      <button class="mode-btn" id="btn-marketing" onclick="setMode('marketing')">📣 Marketing</button>
+    </div>
+    <span id="api-status-dot" style="font-size:10px;color:#888;">⬤ not set</span>
   </div>
 </div>
 
-<!-- ── APP LAYOUT ─────────────────────────────────────────────────────────── -->
+<!-- APP LAYOUT -->
 <div class="app-layout">
-  <div class="sidebar">
+  <div class="sidebar" id="sidebar">
     <div class="sidebar-section-label">Campaigns</div>
-    <div class="sidebar-item active" onclick="switchPage('dashboard');setActive(this)"><div class="dot"></div>Dashboard</div>
-    <div class="sidebar-item" onclick="switchPage('compose');setActive(this)"><div class="dot"></div>New Campaign</div>
+    <div class="sidebar-item active" id="sb-dashboard" onclick="switchPage('dashboard');setSidebarActive(this)"><div class="dot"></div>Dashboard</div>
+    <div class="sidebar-item" id="sb-compose" onclick="switchPage('compose');setSidebarActive(this)"><div class="dot"></div>New Campaign</div>
 
     <div class="sidebar-section-label">Contacts</div>
-    <div class="sidebar-item" onclick="switchPage('contacts');setActive(this)"><div class="dot"></div>Manage Contacts <span class="sidebar-count" id="sb-count">0</span></div>
+    <div class="sidebar-item" id="sb-contacts" onclick="switchPage('contacts');setSidebarActive(this)">
+      <div class="dot"></div>All Contacts
+      <span class="sidebar-count" id="sb-count">0</span>
+    </div>
+    <div class="sidebar-item" id="sb-job-list" onclick="switchPage('contacts');setListFilter('job');setSidebarActive(this)">
+      <div class="dot"></div>💼 Job List
+      <span class="sidebar-count" id="sb-job-count">0</span>
+    </div>
+    <div class="sidebar-item" id="sb-mkt-list" onclick="switchPage('contacts');setListFilter('marketing');setSidebarActive(this)">
+      <div class="dot"></div>📣 Marketing List
+      <span class="sidebar-count" id="sb-mkt-count">0</span>
+    </div>
 
     <div class="sidebar-section-label">Config</div>
-    <div class="sidebar-item" onclick="switchPage('settings');setActive(this)"><div class="dot"></div>API Settings</div>
+    <div class="sidebar-item" id="sb-settings" onclick="switchPage('settings');setSidebarActive(this)"><div class="dot"></div>Settings</div>
   </div>
 
   <div class="main">
 
-    <!-- ── DASHBOARD ──────────────────────────────────────────────────────── -->
+    <!-- ═══ DASHBOARD ═══════════════════════════════════════════════════════ -->
     <div id="page-dashboard" class="page active">
       <div id="api-warning" class="api-banner">
-        ⚠ Backend not configured yet. Go to <strong style="margin:0 4px;">Settings</strong> to enter your API URL and SendGrid key.
-        <button class="btn btn-secondary" style="font-size:10px;padding:5px 12px;" onclick="switchPage('settings')">Configure →</button>
+        ⚠ Brevo key not set. Go to <strong style="margin:0 4px;">Settings</strong> to configure.
+        <button class="btn btn-secondary" style="font-size:10px;padding:4px 10px;" onclick="switchPage('settings')">Configure →</button>
       </div>
 
-      <div class="welcome-banner">
+      <div class="welcome-banner job" id="welcome-banner">
         <div class="welcome-left">
-          <div class="accent-line"></div>
+          <div class="accent-line" id="accent-line" style="background:#4a9eff;"></div>
           <div>
-            <div class="welcome-title">Welcome to mGuru 👋</div>
-            <div class="welcome-sub">Upload contacts, compose a message, and send bulk emails in minutes.</div>
+            <div class="welcome-title" id="welcome-title">💼 Job Search Mode</div>
+            <div class="welcome-sub" id="welcome-sub">Send personalized applications to companies on your list.</div>
           </div>
         </div>
-        <button class="btn btn-primary" onclick="switchPage('compose')">Create Campaign →</button>
+        <button class="btn btn-primary job" id="welcome-cta" onclick="switchPage('compose')">New Campaign →</button>
       </div>
 
       <div class="stats-row">
-        <div class="stat-card"><div class="stat-label">Campaigns Sent</div><div class="stat-value" id="stat-campaigns">0</div></div>
+        <div class="stat-card"><div class="stat-label">Campaigns</div><div class="stat-value" id="stat-campaigns">0</div></div>
         <div class="stat-card gold"><div class="stat-label">Emails Sent</div><div class="stat-value" id="stat-emails">0</div></div>
-        <div class="stat-card blue"><div class="stat-label">Contacts Loaded</div><div class="stat-value" id="stat-contacts">0</div></div>
-        <div class="stat-card purple"><div class="stat-label">Last Send</div><div class="stat-value" style="font-size:14px;margin-top:6px;" id="stat-last">—</div></div>
+        <div class="stat-card blue"><div class="stat-label">Contacts</div><div class="stat-value" id="stat-contacts">0</div></div>
+        <div class="stat-card purple"><div class="stat-label">Last Send</div><div class="stat-value" style="font-size:13px;margin-top:8px;" id="stat-last">—</div></div>
       </div>
 
       <div class="table-card">
-        <div class="table-header"><div class="table-title">Campaign History</div></div>
+        <div class="table-header">
+          <div class="table-title">Campaign History</div>
+          <button class="btn btn-primary" id="dash-new-btn" onclick="switchPage('compose')">+ New</button>
+        </div>
         <table>
-          <thead><tr><th>Campaign</th><th>Recipients</th><th>Sent</th><th>Failed</th><th>Date</th></tr></thead>
-          <tbody id="history-table"><tr><td colspan="5" style="text-align:center;color:var(--muted);padding:28px;">No campaigns yet — compose your first one!</td></tr></tbody>
+          <thead><tr><th>Campaign</th><th>Mode</th><th>Recipients</th><th>Sent</th><th>Failed</th><th>Date</th></tr></thead>
+          <tbody id="history-table">
+            <tr><td colspan="6" style="text-align:center;color:var(--muted);padding:28px;">No campaigns yet — create your first one!</td></tr>
+          </tbody>
         </table>
       </div>
     </div>
 
-    <!-- ── COMPOSE ────────────────────────────────────────────────────────── -->
+    <!-- ═══ COMPOSE ══════════════════════════════════════════════════════════ -->
     <div id="page-compose" class="page">
       <div class="page-header">
-        <div><div class="page-title">Compose Campaign</div><div class="page-subtitle">Write your message and send to your contact list</div></div>
-        <div class="action-row">
-          <button class="btn btn-primary" id="send-btn" onclick="openSendModal()">Send Campaign →</button>
+        <div>
+          <div class="page-title" id="compose-title">💼 Job Search Campaign</div>
+          <div class="page-subtitle">Write your message with merge tags for personalization</div>
         </div>
+        <div class="action-row">
+          <button class="btn btn-secondary" onclick="saveDraft()">Save Draft</button>
+          <button class="btn btn-primary" id="compose-send-btn" onclick="openSendModal()">Send Campaign →</button>
+        </div>
+      </div>
+
+      <!-- Template quick-load tabs -->
+      <div class="template-tabs">
+        <span style="font-size:10px;color:var(--muted);line-height:2.4;margin-right:4px;">Quick templates:</span>
+        <button class="template-tab" id="tpl-job-app" onclick="loadTemplate('job_application')">💼 Job Application</button>
+        <button class="template-tab" id="tpl-followup" onclick="loadTemplate('followup')">🔁 Follow-up</button>
+        <button class="template-tab" id="tpl-product" onclick="loadTemplate('product_intro')">📣 Product Intro</button>
+        <button class="template-tab" id="tpl-collab" onclick="loadTemplate('collaboration')">🤝 Collaboration</button>
+        <button class="template-tab" id="tpl-blank" onclick="loadTemplate('blank')">✏️ Blank</button>
       </div>
 
       <div class="compose-grid">
         <div>
           <div class="form-card">
-            <div class="form-card-header">✉ Message</div>
+            <div class="form-card-header" id="compose-card-title">✉ Message</div>
             <div class="form-card-body">
-              <div class="field-group"><label>From Name</label><input type="text" id="from-name" placeholder="Your Name or Company"></div>
-              <div class="field-group"><label>From Email (must be verified in SendGrid)</label><input type="email" id="from-email" placeholder="you@yourdomain.com"></div>
-              <div class="field-group"><label>Subject Line</label><input type="text" id="subject-input" placeholder="Quick question about {{company}}" value="Quick question about {{company}}"></div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                <div class="field-group"><label>From Name</label><input type="text" id="from-name" placeholder="Your Name"></div>
+                <div class="field-group"><label>From Email (verified in Brevo)</label><input type="email" id="from-email" placeholder="you@yourdomain.com"></div>
+              </div>
+              <div class="field-group"><label>Subject Line</label><input type="text" id="subject-input" placeholder=""></div>
               <div class="field-group">
                 <label>Email Body</label>
-                <textarea id="body-input" rows="10">Hi {{first_name}},
-
-I came across {{company}} and was impressed by what you're building.
-
-I'd love to explore a potential collaboration. Would you be open to a 15-minute call this week?
-
-Looking forward to hearing from you.
-
-Best,
-[Your Name]</textarea>
+                <textarea id="body-input" rows="11"></textarea>
               </div>
               <div>
                 <label>Merge Tags — click to insert</label>
@@ -256,27 +335,32 @@ Best,
           <div class="form-card">
             <div class="form-card-header">👥 Recipients</div>
             <div class="form-card-body">
-              <div id="no-contacts-msg" style="background:var(--paper2);border-radius:var(--radius);padding:14px;font-size:11px;color:var(--muted);margin-bottom:16px;">
-                No contacts loaded. <a href="#" onclick="switchPage('contacts');setActive(document.querySelectorAll('.sidebar-item')[2])" style="color:var(--accent);">Upload a CSV →</a>
+              <div class="field-group">
+                <label>Contact List</label>
+                <select id="recipient-list" onchange="updateRecipientSummary()">
+                  <option value="all">All contacts</option>
+                  <option value="job">💼 Job Search list only</option>
+                  <option value="marketing">📣 Marketing list only</option>
+                </select>
               </div>
-              <div id="contact-summary" style="display:none;background:var(--paper2);border-radius:var(--radius);padding:14px;margin-bottom:16px;font-size:11px;">
-                <div style="display:flex;justify-content:space-between;margin-bottom:6px;"><span style="color:var(--muted)">Total loaded</span><strong id="sum-total">0</strong></div>
-                <div style="display:flex;justify-content:space-between;margin-bottom:6px;"><span style="color:var(--muted)">Valid emails</span><strong style="color:var(--green)" id="sum-valid">0</strong></div>
+              <div style="background:var(--paper2);border-radius:var(--radius);padding:12px;margin-bottom:14px;font-size:11px;">
+                <div style="display:flex;justify-content:space-between;margin-bottom:5px;"><span style="color:var(--muted)">Will send to</span><strong id="sum-total">0 contacts</strong></div>
+                <div style="display:flex;justify-content:space-between;"><span style="color:var(--muted)">Valid emails</span><strong style="color:var(--green)" id="sum-valid">0</strong></div>
+              </div>
+              <div id="no-contacts-msg" style="font-size:11px;color:var(--muted);margin-bottom:10px;">
+                No contacts yet. <a href="#" onclick="switchPage('contacts')" style="color:var(--accent);">Upload CSV →</a>
               </div>
             </div>
           </div>
 
           <div class="form-card">
-            <div class="form-card-header">👁 Live Preview</div>
+            <div class="form-card-header">👁 Preview (first contact)</div>
             <div class="form-card-body">
-              <div style="background:var(--paper2);border-radius:var(--radius);padding:14px;font-size:11px;line-height:1.8;">
-                <div style="border-bottom:1px solid var(--border);padding-bottom:8px;margin-bottom:10px;">
-                  <span style="color:var(--muted)">To:</span> sarah@acmecorp.com<br>
-                  <span style="color:var(--muted)">Subject:</span> <span id="preview-subject">Quick question about Acme Corp</span>
+              <div style="background:var(--paper2);border-radius:var(--radius);padding:12px;font-size:11px;line-height:1.8;">
+                <div style="border-bottom:1px solid var(--border);padding-bottom:7px;margin-bottom:9px;">
+                  <span style="color:var(--muted)">Subject:</span> <span id="preview-subject" style="font-weight:500;"></span>
                 </div>
-                <div id="preview-body" style="white-space:pre-line;font-size:11px;">Hi Sarah,
-
-I came across Acme Corp and was impressed by what you're building...</div>
+                <div id="preview-body" style="white-space:pre-line;color:#333;"></div>
               </div>
             </div>
           </div>
@@ -284,80 +368,129 @@ I came across Acme Corp and was impressed by what you're building...</div>
       </div>
     </div>
 
-    <!-- ── CONTACTS ───────────────────────────────────────────────────────── -->
+    <!-- ═══ CONTACTS ═════════════════════════════════════════════════════════ -->
     <div id="page-contacts" class="page">
       <div class="page-header">
-        <div><div class="page-title">Contacts</div><div class="page-subtitle">Upload a CSV file with your recipients</div></div>
+        <div>
+          <div class="page-title">Contacts</div>
+          <div class="page-subtitle" id="contacts-subtitle">All contacts across both lists</div>
+        </div>
         <div class="action-row">
-          <button class="btn btn-ghost" onclick="clearContacts()">Clear All</button>
-          <button class="btn btn-secondary" onclick="downloadSampleCSV()">Download Sample CSV</button>
+          <button class="btn btn-secondary" onclick="toggleAddForm()">+ Add Contact</button>
+          <button class="btn btn-secondary" onclick="downloadSampleCSV()">Sample CSV</button>
+          <button class="btn btn-ghost" onclick="clearAllContacts()">Clear All</button>
         </div>
       </div>
 
+      <!-- ADD CONTACT FORM -->
+      <div class="add-contact-row" id="add-contact-row">
+        <div style="font-family:'Syne',sans-serif;font-size:12px;font-weight:600;margin-bottom:10px;">➕ Add New Contact</div>
+        <div class="add-contact-grid">
+          <div><label>Email *</label><input type="email" id="add-email" placeholder="email@co.com"></div>
+          <div><label>First Name</label><input type="text" id="add-fname" placeholder="Ahmed"></div>
+          <div><label>Last Name</label><input type="text" id="add-lname" placeholder="Khalil"></div>
+          <div><label>Company</label><input type="text" id="add-company" placeholder="Company Ltd"></div>
+          <div><label>Industry</label><input type="text" id="add-industry" placeholder="Tech"></div>
+          <div>
+            <label>List</label>
+            <select id="add-list" style="margin-bottom:0;padding:7px 9px;font-size:11px;">
+              <option value="job">💼 Job Search</option>
+              <option value="marketing">📣 Marketing</option>
+              <option value="both">Both</option>
+            </select>
+          </div>
+          <div style="display:flex;gap:6px;align-items:flex-end;padding-bottom:1px;">
+            <button class="btn btn-primary" style="white-space:nowrap;" onclick="addContact()">Add ✓</button>
+            <button class="btn btn-ghost" onclick="toggleAddForm()">✕</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- UPLOAD ZONE -->
       <div class="upload-zone" id="drop-zone" onclick="document.getElementById('csv-file').click()">
         <input type="file" id="csv-file" accept=".csv" style="display:none" onchange="handleFile(this.files[0])">
         <div class="upload-icon">📂</div>
-        <div class="upload-title" id="upload-title">Drop your CSV here or click to browse</div>
-        <div class="upload-sub" id="upload-sub">Columns: email, first_name, last_name, company, industry, city</div>
-        <div style="margin-top:14px;"><button class="btn btn-primary" onclick="event.stopPropagation();document.getElementById('csv-file').click()">Choose CSV File</button></div>
+        <div class="upload-title" id="upload-title">Drop CSV or click to browse</div>
+        <div class="upload-sub" id="upload-sub">Columns: email, first_name, last_name, company, industry, city, list (job/marketing)</div>
+        <div style="margin-top:12px;display:flex;gap:8px;justify-content:center;">
+          <button class="btn btn-primary" onclick="event.stopPropagation();document.getElementById('csv-file').click()">Choose File</button>
+          <select id="csv-list-assign" style="font-size:11px;padding:7px 10px;margin:0;width:auto;" onclick="event.stopPropagation()">
+            <option value="job">→ 💼 Job Search list</option>
+            <option value="marketing">→ 📣 Marketing list</option>
+            <option value="both">→ Both lists</option>
+            <option value="auto">→ Auto (use 'list' column)</option>
+          </select>
+        </div>
       </div>
 
-      <div id="upload-error" style="display:none;background:#fde8e8;border:1px solid #f5a5a5;border-radius:var(--radius);padding:12px;margin-bottom:16px;font-size:11px;color:#c0392b;"></div>
+      <div id="upload-error" style="display:none;background:#fde8e8;border:1px solid #f5a5a5;border-radius:var(--radius);padding:10px;margin-bottom:14px;font-size:11px;color:#c0392b;"></div>
 
-      <div class="table-card" id="contacts-table-card" style="display:none">
+      <!-- CONTACTS TABLE -->
+      <div class="table-card" id="contacts-table-card" style="display:none;">
         <div class="table-header">
-          <div class="table-title">Loaded Contacts <span style="color:var(--muted);font-weight:400;font-size:12px;" id="contacts-count-label"></span></div>
-          <input class="search-input" style="width:220px;padding:6px 12px;font-size:11px;" placeholder="Search..." oninput="filterContacts(this.value)">
+          <div class="table-title">
+            <span id="contacts-table-title">All Contacts</span>
+            <span style="color:var(--muted);font-weight:400;font-size:11px;" id="contacts-count-label"></span>
+          </div>
+          <div class="action-row">
+            <input class="search-input" style="width:200px;" placeholder="Search…" oninput="filterContacts(this.value)">
+            <select class="search-input" style="width:140px;" onchange="setListFilter(this.value)">
+              <option value="all">All lists</option>
+              <option value="job">💼 Job only</option>
+              <option value="marketing">📣 Marketing only</option>
+            </select>
+          </div>
         </div>
         <table>
-          <thead><tr><th>#</th><th>Email</th><th>First Name</th><th>Last Name</th><th>Company</th><th>Industry</th><th>City</th></tr></thead>
+          <thead>
+            <tr>
+              <th><input type="checkbox" id="select-all" onchange="toggleSelectAll(this)" style="width:auto;margin:0;padding:0;border:none;"></th>
+              <th>#</th><th>Email</th><th>First Name</th><th>Last Name</th><th>Company</th><th>Industry</th><th>List</th><th>Actions</th>
+            </tr>
+          </thead>
           <tbody id="contacts-tbody"></tbody>
         </table>
+        <div id="bulk-actions" style="display:none;padding:10px 16px;background:#fffbeb;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;font-size:11px;">
+          <span id="selected-count">0 selected</span>
+          <button class="btn btn-ghost" onclick="bulkMoveToList('job')">→ Move to 💼 Job</button>
+          <button class="btn btn-ghost" onclick="bulkMoveToList('marketing')">→ Move to 📣 Marketing</button>
+          <button class="btn btn-danger" onclick="bulkDelete()">Delete selected</button>
+        </div>
       </div>
     </div>
 
-    <!-- ── SETTINGS ───────────────────────────────────────────────────────── -->
+    <!-- ═══ SETTINGS ══════════════════════════════════════════════════════════ -->
     <div id="page-settings" class="page">
       <div class="page-header">
-        <div><div class="page-title">Settings</div><div class="page-subtitle">Enter your Brevo API key to start sending</div></div>
+        <div><div class="page-title">Settings</div><div class="page-subtitle">Configure your Brevo API key</div></div>
       </div>
-
-      <div class="form-card" style="max-width:600px;">
+      <div class="form-card" style="max-width:580px;">
         <div class="form-card-header">🔑 Brevo API Key</div>
         <div class="form-card-body">
           <div class="field-group">
-            <label>Your Brevo API Key</label>
+            <label>API Key</label>
             <input type="text" id="sg-key" placeholder="xkeysib-xxxxxxxxxxxxxxxxxxxxxxxx" oninput="saveSettings()">
-            <div style="font-size:10px;color:var(--muted);margin-top:4px;">Saved in your browser only. Never shared with anyone.</div>
+            <div style="font-size:10px;color:var(--muted);margin-top:4px;">Saved in your browser only.</div>
           </div>
-          <button class="btn btn-secondary" onclick="testConnection()" style="margin-bottom:16px;">Test Key</button>
-          <div id="conn-result" style="font-size:11px;margin-top:-8px;margin-bottom:16px;"></div>
-          <div style="background:#e8f5ee;border:1px solid #b7dfc9;border-radius:var(--radius);padding:14px;font-size:11px;color:#1a5c38;line-height:2;">
-            <strong>How to get your Brevo key (you already have an account ✓):</strong><br>
+          <button class="btn btn-secondary" onclick="testConnection()">Test Key</button>
+          <div id="conn-result" style="font-size:11px;margin-top:10px;"></div>
+          <hr style="border:none;border-top:1px solid var(--border);margin:16px 0;">
+          <div style="background:#e8f5ee;border:1px solid #b7dfc9;border-radius:var(--radius);padding:12px;font-size:11px;color:#1a5c38;line-height:2;">
+            <strong>Get your Brevo key:</strong><br>
             1. Log in at <a href="https://app.brevo.com" target="_blank" style="color:var(--accent)">app.brevo.com</a><br>
-            2. Click your name (top right) → <strong>SMTP & API</strong><br>
-            3. Click <strong>API Keys</strong> tab → <strong>Generate a new API key</strong><br>
-            4. Name it "mGuru" → click Generate<br>
-            5. Copy the key and paste it above<br>
-            6. Then go to <strong>Senders & Domains → Senders → Add a sender</strong> and verify your email
+            2. Avatar (top right) → SMTP & API → API Keys → Generate<br>
+            3. Name it "mGuru" → copy and paste above<br>
+            4. Senders & Domains → verify your sender email
           </div>
         </div>
       </div>
-
-      <div class="form-card" style="max-width:600px;margin-top:16px;">
-        <div class="form-card-header">🔌 Backend API URL (after Vercel deploy)</div>
+      <div class="form-card" style="max-width:580px;margin-top:14px;">
+        <div class="form-card-header">🔌 Backend URL (optional)</div>
         <div class="form-card-body">
           <div class="field-group">
-            <label>Your Vercel App URL</label>
+            <label>Vercel App URL</label>
             <input type="text" id="api-url" placeholder="https://mguru.vercel.app" oninput="saveSettings()">
-            <div style="font-size:10px;color:var(--muted);margin-top:4px;">Leave empty if this page IS already deployed on Vercel (it auto-connects)</div>
-          </div>
-          <div style="background:var(--paper2);border-radius:var(--radius);padding:14px;font-size:11px;color:var(--muted);line-height:2;">
-            <strong style="color:var(--ink)">How to deploy on Vercel (free):</strong><br>
-            1. Go to <a href="https://github.com" target="_blank" style="color:var(--accent)">github.com</a> → New repo → upload the project zip contents<br>
-            2. Go to <a href="https://vercel.com" target="_blank" style="color:var(--accent)">vercel.com</a> → New Project → import your GitHub repo<br>
-            3. Add environment variable: <code style="background:var(--paper2);padding:1px 5px;border-radius:2px;border:1px solid var(--border)">BREVO_API_KEY</code> = your key<br>
-            4. Deploy → copy your Vercel URL → paste above
+            <div style="font-size:10px;color:var(--muted);margin-top:4px;">Leave empty if this page is hosted on Vercel already (auto-detected).</div>
           </div>
         </div>
       </div>
@@ -366,27 +499,26 @@ I came across Acme Corp and was impressed by what you're building...</div>
   </div>
 </div>
 
-<!-- ── SEND MODAL ─────────────────────────────────────────────────────────── -->
+<!-- SEND MODAL -->
 <div class="modal-overlay" id="send-modal">
   <div class="modal">
-    <div class="modal-header">
+    <div class="modal-header" id="modal-header-bar">
       <div class="modal-title">Send Campaign</div>
       <button class="modal-close" onclick="closeModal()">×</button>
     </div>
     <div class="modal-body">
       <div id="confirm-view">
-        <p style="margin-bottom:14px;font-size:12px;color:var(--muted);">Review before sending:</p>
         <div class="info-grid">
-          <div class="info-row"><span style="color:var(--muted)">From</span><strong id="conf-from">—</strong></div>
+          <div class="info-row"><span style="color:var(--muted)">From</span><strong id="conf-from" style="font-size:11px;">—</strong></div>
           <div class="info-row"><span style="color:var(--muted)">Recipients</span><strong id="conf-recipients">—</strong></div>
-          <div class="info-row" style="grid-column:1/-1"><span style="color:var(--muted)">Subject</span><strong id="conf-subject">—</strong></div>
+          <div class="info-row" style="grid-column:1/-1"><span style="color:var(--muted)">Subject</span><strong id="conf-subject" style="font-size:11px;">—</strong></div>
         </div>
-        <div style="background:#fef3e2;border:1px solid #fde68a;border-radius:var(--radius);padding:12px;font-size:11px;color:#92400e;margin-top:8px;">
-          ⚠ Only email people who have given you permission. Check your local spam laws (CAN-SPAM, GDPR).
+        <div style="background:#fef3e2;border:1px solid #fde68a;border-radius:var(--radius);padding:11px;font-size:11px;color:#92400e;">
+          ⚠ Only email people who gave you permission. Check CAN-SPAM / GDPR rules.
         </div>
       </div>
       <div id="progress-view" style="display:none">
-        <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:600;margin-bottom:8px;" id="progress-label">Preparing…</div>
+        <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:600;margin-bottom:7px;" id="progress-label">Preparing…</div>
         <div class="progress-track"><div class="progress-track-fill" id="progress-fill" style="width:0%"></div></div>
         <div class="send-log" id="send-log"></div>
       </div>
@@ -399,26 +531,97 @@ I came across Acme Corp and was impressed by what you're building...</div>
 </div>
 
 <script>
-// ── STATE ──────────────────────────────────────────────────────────────────
-let contacts = [];
-let allContacts = [];
-let campaigns = [];
+// ═══════════════════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════════════════
+let allContacts = [];       // { id, email, first_name, last_name, company, industry, city, list }
+let campaigns   = [];
+let currentMode = 'job';    // 'job' | 'marketing'
+let currentListFilter = 'all';
+let selectedIds = new Set();
 let settings = JSON.parse(localStorage.getItem('mguru_settings') || '{}');
 
-// ── INIT ───────────────────────────────────────────────────────────────────
+const TEMPLATES = {
+  job_application: {
+    subject: 'Application for {{company}} — Open to new opportunities',
+    body: `Dear {{first_name}},
+
+I came across {{company}} and was immediately drawn to the work your team is doing in the {{industry}} space.
+
+I'm currently exploring new opportunities and believe my background could be a strong fit. I'd love to share more about my experience and learn about any open roles at {{company}}.
+
+Would you be open to a brief 15-minute call this week?
+
+Thank you for your time.
+
+Best regards,
+[Your Name]`
+  },
+  followup: {
+    subject: 'Following up — {{company}}',
+    body: `Hi {{first_name}},
+
+I wanted to follow up on my previous message regarding {{company}}.
+
+I know you're busy, so I'll keep this short — I'm still very interested and would love to connect whenever suits you.
+
+Best,
+[Your Name]`
+  },
+  product_intro: {
+    subject: 'Quick question about {{company}}',
+    body: `Hi {{first_name}},
+
+I noticed {{company}} is doing great work in {{industry}} and thought you might find this useful.
+
+We help companies like yours [describe your product/service in one sentence]. I'd love to share how it could specifically help {{company}}.
+
+Would a quick 10-minute call this week work for you?
+
+Best,
+[Your Name]`
+  },
+  collaboration: {
+    subject: 'Partnership opportunity — {{company}} × [Your Company]',
+    body: `Hi {{first_name}},
+
+I've been following {{company}}'s work in {{industry}} and see a strong potential for collaboration.
+
+I think there's a genuine opportunity for us to create something valuable together. Would you be open to a quick exploratory call?
+
+Looking forward to hearing from you.
+
+Best,
+[Your Name]`
+  },
+  blank: {
+    subject: '',
+    body: ''
+  }
+};
+
+// ═══════════════════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════════════════
 window.addEventListener('load', () => {
-  if (settings.apiUrl) document.getElementById('api-url').value = settings.apiUrl;
   if (settings.sgKey)  document.getElementById('sg-key').value  = settings.sgKey;
-  campaigns = JSON.parse(localStorage.getItem('mguru_campaigns') || '[]');
+  if (settings.apiUrl) document.getElementById('api-url').value = settings.apiUrl;
+
+  allContacts = JSON.parse(localStorage.getItem('mguru_contacts') || '[]');
+  campaigns   = JSON.parse(localStorage.getItem('mguru_campaigns') || '[]');
+
+  setMode(settings.mode || 'job', false);
   renderHistory();
   updateStats();
   checkApiStatus();
+  updateSidebarCounts();
 
-  // Live preview
-  ['subject-input','body-input'].forEach(id => {
-    document.getElementById(id).addEventListener('input', updatePreview);
-  });
+  ['subject-input','body-input'].forEach(id =>
+    document.getElementById(id).addEventListener('input', updatePreview)
+  );
+  loadTemplate('job_application');
   updatePreview();
+  updateRecipientSummary();
 
   // Drag & drop
   const dz = document.getElementById('drop-zone');
@@ -430,7 +633,54 @@ window.addEventListener('load', () => {
   });
 });
 
-// ── NAVIGATION ─────────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════════════
+// MODE SWITCHING
+// ═══════════════════════════════════════════════════════════════════════════
+function setMode(mode, save=true) {
+  currentMode = mode;
+  if (save) { settings.mode = mode; localStorage.setItem('mguru_settings', JSON.stringify(settings)); }
+
+  const isJob = mode === 'job';
+  document.getElementById('btn-job').className        = 'mode-btn ' + (isJob ? 'active-job' : '');
+  document.getElementById('btn-marketing').className  = 'mode-btn ' + (!isJob ? 'active-marketing' : '');
+
+  // Welcome banner
+  const wb = document.getElementById('welcome-banner');
+  wb.className = 'welcome-banner ' + mode;
+  document.getElementById('accent-line').style.background = isJob ? '#4a9eff' : '#e8472a';
+  document.getElementById('welcome-title').textContent  = isJob ? '💼 Job Search Mode' : '📣 Marketing Mode';
+  document.getElementById('welcome-sub').textContent    = isJob
+    ? 'Send personalized applications to companies on your job list.'
+    : 'Promote your products to your marketing contact list.';
+  document.getElementById('welcome-cta').className = 'btn btn-primary ' + mode;
+
+  // Compose page
+  document.getElementById('compose-title').textContent = isJob ? '💼 Job Search Campaign' : '📣 Marketing Campaign';
+
+  // Template tabs highlight
+  ['tpl-job-app','tpl-followup'].forEach(id => {
+    document.getElementById(id).className = 'template-tab ' + (isJob ? 'active-job' : '');
+  });
+  ['tpl-product','tpl-collab'].forEach(id => {
+    document.getElementById(id).className = 'template-tab ' + (!isJob ? 'active-marketing' : '');
+  });
+
+  // Sidebar accent
+  document.querySelectorAll('.sidebar-item.active').forEach(el => {
+    el.classList.toggle('job-mode', isJob);
+  });
+
+  // Auto-select recipient list in compose
+  document.getElementById('recipient-list').value = mode;
+  updateRecipientSummary();
+
+  // Load default template for mode
+  loadTemplate(isJob ? 'job_application' : 'product_intro');
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════════════════════════════════
 function switchPage(name) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById('page-' + name).classList.add('active');
@@ -440,223 +690,424 @@ function switchNav(btn, page) {
   btn.classList.add('active');
   switchPage(page);
 }
-function setActive(item) {
-  document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
-  item.classList.add('active');
+function setSidebarActive(el) {
+  document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active','job-mode'));
+  el.classList.add('active');
+  if (currentMode === 'job') el.classList.add('job-mode');
 }
 
-// ── SETTINGS ───────────────────────────────────────────────────────────────
-function saveSettings() {
-  settings.apiUrl = document.getElementById('api-url').value.trim().replace(/\/$/, '');
-  settings.sgKey  = document.getElementById('sg-key').value.trim();
-  localStorage.setItem('mguru_settings', JSON.stringify(settings));
+// ═══════════════════════════════════════════════════════════════════════════
+// TEMPLATES
+// ═══════════════════════════════════════════════════════════════════════════
+function loadTemplate(name) {
+  const tpl = TEMPLATES[name];
+  if (!tpl) return;
+  document.getElementById('subject-input').value = tpl.subject;
+  document.getElementById('body-input').value    = tpl.body;
+  updatePreview();
 }
 
-async function testConnection() {
-  const key = document.getElementById('sg-key').value.trim();
-  const el = document.getElementById('conn-result');
-  if (!key) { el.textContent = '⚠ Enter your Brevo API key first.'; el.style.color = '#b45309'; return; }
-  el.textContent = 'Checking…';
-  el.style.color = 'var(--muted)';
-  try {
-    const res = await fetch('https://api.brevo.com/v3/account', {
-      headers: { 'api-key': key, 'accept': 'application/json' }
-    });
-    const data = await res.json();
-    if (res.ok) {
-      el.textContent = '✓ Brevo connected — account: ' + (data.email || 'OK');
-      el.style.color = 'var(--green)';
-      checkApiStatus();
-    } else {
-      el.textContent = '✗ Invalid key: ' + (data.message || 'unauthorized');
-      el.style.color = '#c0392b';
-    }
-  } catch {
-    el.textContent = '✗ Could not reach Brevo. Check your key.';
-    el.style.color = '#c0392b';
+// ═══════════════════════════════════════════════════════════════════════════
+// CONTACTS — CRUD
+// ═══════════════════════════════════════════════════════════════════════════
+function saveContacts() {
+  localStorage.setItem('mguru_contacts', JSON.stringify(allContacts));
+  updateSidebarCounts();
+  updateStats();
+  updateRecipientSummary();
+}
+
+function getFilteredContacts(filter) {
+  if (filter === 'all') return allContacts;
+  return allContacts.filter(c => c.list === filter || c.list === 'both');
+}
+
+function setListFilter(val) {
+  currentListFilter = val;
+  renderContactsTable();
+  const el = document.getElementById('contacts-subtitle');
+  if (el) el.textContent = val === 'all' ? 'All contacts across both lists'
+    : val === 'job' ? '💼 Job Search list contacts'
+    : '📣 Marketing list contacts';
+}
+
+function toggleAddForm() {
+  const row = document.getElementById('add-contact-row');
+  row.classList.toggle('open');
+  if (row.classList.contains('open')) document.getElementById('add-email').focus();
+}
+
+function addContact() {
+  const email = document.getElementById('add-email').value.trim();
+  if (!email || !email.includes('@')) { alert('Please enter a valid email address.'); return; }
+
+  const contact = {
+    id:         Date.now(),
+    email,
+    first_name: document.getElementById('add-fname').value.trim(),
+    last_name:  document.getElementById('add-lname').value.trim(),
+    company:    document.getElementById('add-company').value.trim(),
+    industry:   document.getElementById('add-industry').value.trim(),
+    city:       '',
+    list:       document.getElementById('add-list').value,
+  };
+
+  allContacts.unshift(contact);
+  saveContacts();
+  renderContactsTable();
+  document.getElementById('contacts-table-card').style.display = 'block';
+
+  // Clear form
+  ['add-email','add-fname','add-lname','add-company','add-industry'].forEach(id =>
+    document.getElementById(id).value = '');
+  document.getElementById('add-email').focus();
+}
+
+function deleteContact(id) {
+  allContacts = allContacts.filter(c => c.id !== id);
+  saveContacts();
+  renderContactsTable();
+}
+
+function bulkDelete() {
+  if (!selectedIds.size) return;
+  if (!confirm(`Delete ${selectedIds.size} contacts?`)) return;
+  allContacts = allContacts.filter(c => !selectedIds.has(c.id));
+  selectedIds.clear();
+  saveContacts();
+  renderContactsTable();
+}
+
+function bulkMoveToList(list) {
+  allContacts = allContacts.map(c => selectedIds.has(c.id) ? {...c, list} : c);
+  selectedIds.clear();
+  saveContacts();
+  renderContactsTable();
+}
+
+function toggleSelectAll(cb) {
+  const displayed = getFilteredContacts(currentListFilter);
+  if (cb.checked) displayed.forEach(c => selectedIds.add(c.id));
+  else selectedIds.clear();
+  renderContactsTable();
+}
+
+function toggleSelect(id, checked) {
+  if (checked) selectedIds.add(id);
+  else selectedIds.delete(id);
+  updateBulkActions();
+}
+
+function updateBulkActions() {
+  const bar = document.getElementById('bulk-actions');
+  bar.style.display = selectedIds.size ? 'flex' : 'none';
+  document.getElementById('selected-count').textContent = selectedIds.size + ' selected';
+}
+
+function clearAllContacts() {
+  if (!confirm('Clear all contacts? This cannot be undone.')) return;
+  allContacts = [];
+  saveContacts();
+  renderContactsTable();
+  document.getElementById('contacts-table-card').style.display = 'none';
+}
+
+// ─── INLINE EDIT ──────────────────────────────────────────────────────────
+function makeEditable(cell, contactId, field) {
+  const current = cell.textContent;
+  cell.innerHTML = `<input type="text" value="${current}" onblur="saveEdit(this,${contactId},'${field}')" onkeydown="if(event.key==='Enter')this.blur();if(event.key==='Escape'){this.parentElement.textContent='${current}';}">`;
+  cell.querySelector('input').focus();
+  cell.querySelector('input').select();
+}
+
+function saveEdit(input, contactId, field) {
+  const val = input.value.trim();
+  const contact = allContacts.find(c => c.id === contactId);
+  if (contact) {
+    contact[field] = val;
+    saveContacts();
   }
+  renderContactsTable();
 }
 
-async function checkApiStatus() {
-  const key = settings.sgKey;
-  const dot = document.getElementById('api-status-dot');
-  const banner = document.getElementById('api-warning');
-  if (!key) return;
-  try {
-    const res = await fetch('https://api.brevo.com/v3/account', {
-      headers: { 'api-key': key, 'accept': 'application/json' }
-    });
-    if (res.ok) {
-      dot.textContent = '● Brevo connected';
-      dot.style.color = '#2d6a4f';
-      if (banner) { banner.className = 'api-banner connected'; banner.innerHTML = '✓ Brevo API key active — ready to send!'; }
-    }
-  } catch { /* silent */ }
+// ─── RENDER TABLE ─────────────────────────────────────────────────────────
+function renderContactsTable() {
+  const data = getFilteredContacts(currentListFilter);
+  const tbody = document.getElementById('contacts-tbody');
+  document.getElementById('contacts-count-label').textContent = ` (${data.length})`;
+
+  if (!data.length) {
+    tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;color:var(--muted);padding:24px;">No contacts. Add one above or upload a CSV.</td></tr>';
+    updateBulkActions();
+    return;
+  }
+
+  tbody.innerHTML = data.slice(0, 200).map(c => {
+    const listBadge = c.list === 'job' ? '<span class="badge badge-job">💼 Job</span>'
+      : c.list === 'marketing' ? '<span class="badge badge-marketing">📣 Mkt</span>'
+      : '<span class="badge badge-draft">Both</span>';
+    const checked = selectedIds.has(c.id) ? 'checked' : '';
+    return `<tr>
+      <td><input type="checkbox" ${checked} onchange="toggleSelect(${c.id},this.checked)" style="width:auto;margin:0;padding:0;border:none;"></td>
+      <td style="color:var(--muted);font-size:10px;">${c.id}</td>
+      <td class="editable-cell" onclick="makeEditable(this,${c.id},'email')" title="Click to edit">${c.email}</td>
+      <td class="editable-cell" onclick="makeEditable(this,${c.id},'first_name')" title="Click to edit">${c.first_name || '—'}</td>
+      <td class="editable-cell" onclick="makeEditable(this,${c.id},'last_name')" title="Click to edit">${c.last_name || '—'}</td>
+      <td class="editable-cell" onclick="makeEditable(this,${c.id},'company')" title="Click to edit">${c.company || '—'}</td>
+      <td class="editable-cell" onclick="makeEditable(this,${c.id},'industry')" title="Click to edit">${c.industry || '—'}</td>
+      <td>
+        <select style="font-size:10px;padding:2px 5px;border:1px solid var(--border);border-radius:2px;background:var(--paper);margin:0;width:auto;" onchange="changeContactList(${c.id},this.value)">
+          <option value="job" ${c.list==='job'?'selected':''}>💼 Job</option>
+          <option value="marketing" ${c.list==='marketing'?'selected':''}>📣 Mkt</option>
+          <option value="both" ${c.list==='both'?'selected':''}>Both</option>
+        </select>
+      </td>
+      <td><button class="btn-danger" style="font-size:10px;border:none;background:none;cursor:pointer;color:#dc2626;padding:2px 6px;" onclick="deleteContact(${c.id})">✕</button></td>
+    </tr>`;
+  }).join('');
+
+  if (data.length > 200) {
+    tbody.innerHTML += `<tr><td colspan="9" style="text-align:center;color:var(--muted);padding:10px;font-size:10px;">Showing first 200 of ${data.length}</td></tr>`;
+  }
+  updateBulkActions();
 }
 
-// ── CSV UPLOAD ─────────────────────────────────────────────────────────────
+function changeContactList(id, list) {
+  const c = allContacts.find(c => c.id === id);
+  if (c) { c.list = list; saveContacts(); }
+}
+
+function filterContacts(q) {
+  const lower = q.toLowerCase();
+  const data = getFilteredContacts(currentListFilter).filter(c =>
+    c.email.toLowerCase().includes(lower) ||
+    (c.first_name||'').toLowerCase().includes(lower) ||
+    (c.company||'').toLowerCase().includes(lower)
+  );
+  const tbody = document.getElementById('contacts-tbody');
+  tbody.innerHTML = data.map(c => {
+    const listBadge = c.list === 'job' ? '<span class="badge badge-job">💼</span>'
+      : c.list === 'marketing' ? '<span class="badge badge-marketing">📣</span>'
+      : '<span class="badge badge-draft">Both</span>';
+    return `<tr>
+      <td></td>
+      <td style="color:var(--muted);font-size:10px;">${c.id}</td>
+      <td class="editable-cell" onclick="makeEditable(this,${c.id},'email')">${c.email}</td>
+      <td class="editable-cell" onclick="makeEditable(this,${c.id},'first_name')">${c.first_name||'—'}</td>
+      <td class="editable-cell" onclick="makeEditable(this,${c.id},'last_name')">${c.last_name||'—'}</td>
+      <td class="editable-cell" onclick="makeEditable(this,${c.id},'company')">${c.company||'—'}</td>
+      <td class="editable-cell" onclick="makeEditable(this,${c.id},'industry')">${c.industry||'—'}</td>
+      <td>${listBadge}</td>
+      <td><button style="font-size:10px;border:none;background:none;cursor:pointer;color:#dc2626;" onclick="deleteContact(${c.id})">✕</button></td>
+    </tr>`;
+  }).join('') || '<tr><td colspan="9" style="text-align:center;color:var(--muted);padding:20px;">No results.</td></tr>';
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// CSV UPLOAD
+// ═══════════════════════════════════════════════════════════════════════════
 async function handleFile(file) {
   const errEl = document.getElementById('upload-error');
   errEl.style.display = 'none';
   document.getElementById('upload-title').textContent = 'Parsing ' + file.name + '…';
 
-  // Try backend parse first; fallback to client-side
-  if (settings.apiUrl) {
-    try {
-      const fd = new FormData();
-      fd.append('file', file);
-      const res = await fetch(settings.apiUrl + '/api/contacts/upload', { method: 'POST', body: fd });
-      const data = await res.json();
-      if (data.error) throw new Error(data.error);
-      loadContacts(data.contacts, file.name);
-      return;
-    } catch (e) {
-      // fallback to client parse
-    }
-  }
-
-  // Client-side CSV parse (simple)
   const text = await file.text();
   const rows = text.trim().split('\n');
-  const headers = rows[0].split(',').map(h => h.trim().toLowerCase().replace(/['"]/g, ''));
-  const parsed = rows.slice(1).map((row, i) => {
-    const vals = row.split(',').map(v => v.trim().replace(/^"|"$/g, ''));
+  const headers = rows[0].split(',').map(h => h.trim().replace(/['"]/g,'').toLowerCase());
+  const listAssign = document.getElementById('csv-list-assign').value;
+
+  const parsed = rows.slice(1).map((row,i) => {
+    const vals = row.split(',').map(v => v.trim().replace(/^"|"$/g,''));
     const obj = {};
-    headers.forEach((h, j) => obj[h] = vals[j] || '');
+    headers.forEach((h,j) => obj[h] = (vals[j]||'').trim());
+
+    let list = 'job';
+    if (listAssign === 'auto') {
+      list = (obj.list||'job').toLowerCase().includes('market') ? 'marketing'
+           : (obj.list||'').toLowerCase().includes('both') ? 'both' : 'job';
+    } else if (listAssign === 'marketing') list = 'marketing';
+    else if (listAssign === 'both') list = 'both';
+
     return {
-      id: i + 1,
-      email:      obj.email || obj['e-mail'] || obj['email address'] || '',
-      first_name: obj.first_name || obj.firstname || obj.first || (obj.name || '').split(' ')[0] || '',
-      last_name:  obj.last_name  || obj.lastname  || obj.last  || (obj.name || '').split(' ').slice(1).join(' ') || '',
+      id:         Date.now() + i,
+      email:      obj.email || obj['e-mail'] || '',
+      first_name: obj.first_name || obj.firstname || (obj.name||'').split(' ')[0] || '',
+      last_name:  obj.last_name  || obj.lastname  || (obj.name||'').split(' ').slice(1).join(' ') || '',
       company:    obj.company    || obj.organization || '',
       industry:   obj.industry   || '',
-      city:       obj.city       || obj.location || '',
+      city:       obj.city       || '',
+      list,
     };
   }).filter(c => c.email && c.email.includes('@'));
 
   if (!parsed.length) {
     errEl.style.display = 'block';
     errEl.textContent = 'No valid email addresses found. Make sure your CSV has an "email" column.';
-    document.getElementById('upload-title').textContent = 'Drop your CSV here or click to browse';
+    document.getElementById('upload-title').textContent = 'Drop CSV or click to browse';
     return;
   }
-  loadContacts(parsed, file.name);
-}
 
-function loadContacts(data, filename) {
-  contacts = data;
-  allContacts = data;
-  renderContactsTable(data);
-  document.getElementById('upload-title').textContent = '✓ ' + filename + ' loaded';
-  document.getElementById('upload-sub').textContent = data.length + ' valid contacts found';
+  // Merge — skip duplicates
+  const existing = new Set(allContacts.map(c => c.email.toLowerCase()));
+  const newOnes = parsed.filter(c => !existing.has(c.email.toLowerCase()));
+  allContacts = [...allContacts, ...newOnes];
+  saveContacts();
+
+  document.getElementById('upload-title').textContent = `✓ ${file.name} — ${newOnes.length} new contacts added`;
+  document.getElementById('upload-sub').textContent = `${parsed.length - newOnes.length} duplicates skipped`;
   document.getElementById('contacts-table-card').style.display = 'block';
-  document.getElementById('contacts-count-label').textContent = '(' + data.length + ')';
-  document.getElementById('sb-count').textContent = data.length;
-
-  // Update compose panel
-  document.getElementById('no-contacts-msg').style.display = 'none';
-  document.getElementById('contact-summary').style.display = 'block';
-  document.getElementById('sum-total').textContent = data.length;
-  document.getElementById('sum-valid').textContent = data.length;
-  updateStats();
+  renderContactsTable();
+  updateRecipientSummary();
 }
 
-function renderContactsTable(data) {
-  const tbody = document.getElementById('contacts-tbody');
-  if (!data.length) { tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:20px;">No contacts match your search.</td></tr>'; return; }
-  tbody.innerHTML = data.slice(0, 100).map(c => `
-    <tr>
-      <td style="color:var(--muted)">${c.id}</td>
-      <td>${c.email}</td>
-      <td>${c.first_name}</td>
-      <td>${c.last_name}</td>
-      <td>${c.company}</td>
-      <td>${c.industry}</td>
-      <td>${c.city}</td>
-    </tr>`).join('');
-  if (data.length > 100) {
-    tbody.innerHTML += `<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:12px;font-size:11px;">Showing first 100 of ${data.length}</td></tr>`;
-  }
+function updateSidebarCounts() {
+  document.getElementById('sb-count').textContent     = allContacts.length;
+  document.getElementById('sb-job-count').textContent = getFilteredContacts('job').length;
+  document.getElementById('sb-mkt-count').textContent = getFilteredContacts('marketing').length;
 }
 
-function filterContacts(q) {
-  const filtered = allContacts.filter(c =>
-    c.email.toLowerCase().includes(q.toLowerCase()) ||
-    c.first_name.toLowerCase().includes(q.toLowerCase()) ||
-    c.company.toLowerCase().includes(q.toLowerCase())
-  );
-  renderContactsTable(filtered);
+function downloadSampleCSV() {
+  const csv = `email,first_name,last_name,company,industry,city,list
+sarah@acmecorp.com,Sarah,Johnson,Acme Corp,Technology,Cairo,job
+m.rashid@venture.io,Mohammed,Al-Rashid,Venture IO,Finance,Dubai,marketing
+elena@techfund.vc,Elena,Petrov,TechFund VC,Investment,London,job
+yuki@innovate.jp,Yuki,Tanaka,Innovate JP,Manufacturing,Tokyo,marketing`;
+  const a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+  a.download = 'mguru_sample.csv';
+  a.click();
 }
 
-function clearContacts() {
-  contacts = []; allContacts = [];
-  document.getElementById('contacts-table-card').style.display = 'none';
-  document.getElementById('upload-title').textContent = 'Drop your CSV here or click to browse';
-  document.getElementById('upload-sub').textContent = 'Columns: email, first_name, last_name, company, industry, city';
-  document.getElementById('no-contacts-msg').style.display = 'block';
-  document.getElementById('contact-summary').style.display = 'none';
-  document.getElementById('sb-count').textContent = '0';
-  updateStats();
-}
-
-// ── MERGE TAG PREVIEW ──────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════════════
+// COMPOSE / PREVIEW
+// ═══════════════════════════════════════════════════════════════════════════
 function applyTags(text, c) {
   return text
-    .replace(/\{\{first_name\}\}/gi, c.first_name || 'Sarah')
-    .replace(/\{\{last_name\}\}/gi,  c.last_name  || 'Johnson')
-    .replace(/\{\{company\}\}/gi,    c.company    || 'Acme Corp')
-    .replace(/\{\{email\}\}/gi,      c.email      || 'sarah@acmecorp.com')
-    .replace(/\{\{industry\}\}/gi,   c.industry   || 'Technology')
-    .replace(/\{\{city\}\}/gi,       c.city       || 'Cairo');
+    .replace(/\{\{first_name\}\}/gi, c.first_name || '')
+    .replace(/\{\{last_name\}\}/gi,  c.last_name  || '')
+    .replace(/\{\{company\}\}/gi,    c.company    || '')
+    .replace(/\{\{email\}\}/gi,      c.email      || '')
+    .replace(/\{\{industry\}\}/gi,   c.industry   || '')
+    .replace(/\{\{city\}\}/gi,       c.city       || '');
 }
 
 function updatePreview() {
-  const sample = contacts[0] || { first_name:'Sarah', last_name:'Johnson', company:'Acme Corp', email:'sarah@acmecorp.com', industry:'Technology', city:'Cairo' };
+  const list = document.getElementById('recipient-list').value;
+  const sample = getFilteredContacts(list)[0] || {
+    first_name:'Sarah', last_name:'Johnson', company:'Acme Corp',
+    email:'sarah@acmecorp.com', industry:'Technology', city:'Cairo'
+  };
   document.getElementById('preview-subject').textContent = applyTags(document.getElementById('subject-input').value, sample);
-  document.getElementById('preview-body').textContent    = applyTags(document.getElementById('body-input').value, sample).slice(0, 200) + '…';
+  const body = applyTags(document.getElementById('body-input').value, sample);
+  document.getElementById('preview-body').textContent = body.slice(0, 220) + (body.length > 220 ? '…' : '');
+}
+
+function updateRecipientSummary() {
+  const list = document.getElementById('recipient-list').value;
+  const filtered = getFilteredContacts(list);
+  document.getElementById('sum-total').textContent = filtered.length + ' contacts';
+  document.getElementById('sum-valid').textContent = filtered.length;
+  const msg = document.getElementById('no-contacts-msg');
+  if (msg) msg.style.display = filtered.length ? 'none' : 'block';
 }
 
 function insertTag(tag) {
   const ta = document.getElementById('body-input');
   const pos = ta.selectionStart;
-  ta.value = ta.value.slice(0, pos) + tag + ta.value.slice(pos);
+  ta.value = ta.value.slice(0,pos) + tag + ta.value.slice(pos);
   ta.selectionStart = ta.selectionEnd = pos + tag.length;
   ta.focus();
   updatePreview();
 }
 
-// ── SEND FLOW ──────────────────────────────────────────────────────────────
+function saveDraft() {
+  alert('Draft saved! (In the full version this would save to your account.)');
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// SETTINGS
+// ═══════════════════════════════════════════════════════════════════════════
+function saveSettings() {
+  settings.apiUrl = (document.getElementById('api-url').value||'').trim().replace(/\/$/,'');
+  settings.sgKey  = (document.getElementById('sg-key').value||'').trim();
+  localStorage.setItem('mguru_settings', JSON.stringify(settings));
+}
+
+async function testConnection() {
+  const key = document.getElementById('sg-key').value.trim();
+  const el  = document.getElementById('conn-result');
+  if (!key) { el.textContent = '⚠ Enter your Brevo key first.'; el.style.color='#b45309'; return; }
+  el.textContent = 'Checking…'; el.style.color = 'var(--muted)';
+  try {
+    const res  = await fetch('https://api.brevo.com/v3/account', { headers:{'api-key':key,'accept':'application/json'} });
+    const data = await res.json();
+    if (res.ok) {
+      el.textContent = '✓ Connected — ' + (data.email||'OK');
+      el.style.color = 'var(--green)';
+      checkApiStatus();
+    } else {
+      el.textContent = '✗ Invalid key: ' + (data.message||'unauthorized');
+      el.style.color = '#c0392b';
+    }
+  } catch { el.textContent = '✗ Could not reach Brevo.'; el.style.color='#c0392b'; }
+}
+
+async function checkApiStatus() {
+  const key = settings.sgKey;
+  if (!key) return;
+  try {
+    const res = await fetch('https://api.brevo.com/v3/account', { headers:{'api-key':key,'accept':'application/json'} });
+    const dot = document.getElementById('api-status-dot');
+    const banner = document.getElementById('api-warning');
+    if (res.ok) {
+      dot.textContent = '⬤ Brevo ✓'; dot.style.color = '#2d6a4f';
+      if (banner) { banner.className='api-banner connected'; banner.innerHTML='✓ Brevo connected and ready!'; }
+    }
+  } catch {}
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// SEND
+// ═══════════════════════════════════════════════════════════════════════════
 function openSendModal() {
-  if (!contacts.length) { alert('Upload a contact list first in the Contacts tab.'); return; }
+  const list = document.getElementById('recipient-list').value;
+  const sendContacts = getFilteredContacts(list);
+  if (!sendContacts.length) { alert('No contacts in the selected list. Upload or add contacts first.'); return; }
   const fromEmail = document.getElementById('from-email').value.trim();
   if (!fromEmail) { alert('Enter a From Email address.'); return; }
 
-  document.getElementById('conf-from').textContent    = (document.getElementById('from-name').value || '') + ' <' + fromEmail + '>';
-  document.getElementById('conf-recipients').textContent = contacts.length + ' contacts';
-  document.getElementById('conf-subject').textContent  = document.getElementById('subject-input').value;
+  document.getElementById('conf-from').textContent       = (document.getElementById('from-name').value||'') + ' <' + fromEmail + '>';
+  document.getElementById('conf-recipients').textContent = sendContacts.length + ' contacts (' + (list==='all'?'all':list) + ' list)';
+  document.getElementById('conf-subject').textContent    = document.getElementById('subject-input').value;
 
   document.getElementById('confirm-view').style.display = 'block';
   document.getElementById('progress-view').style.display = 'none';
   document.getElementById('modal-footer').innerHTML = `
     <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-    <button class="btn btn-primary" id="confirm-send-btn" onclick="executeSend()">Send to ${contacts.length} contacts →</button>`;
+    <button class="btn btn-primary ${currentMode}" onclick="executeSend()">Send to ${sendContacts.length} →</button>`;
   document.getElementById('send-modal').classList.add('open');
 }
 
-function closeModal() {
-  document.getElementById('send-modal').classList.remove('open');
-}
+function closeModal() { document.getElementById('send-modal').classList.remove('open'); }
 
 async function executeSend() {
+  const list = document.getElementById('recipient-list').value;
+  const sendContacts = getFilteredContacts(list);
   const apiBase = settings.apiUrl || '';
+
+  if (!settings.sgKey) {
+    alert('No Brevo key. Go to Settings first.');
+    return;
+  }
 
   document.getElementById('confirm-view').style.display = 'none';
   document.getElementById('progress-view').style.display = 'block';
   document.getElementById('modal-footer').innerHTML = '';
 
-  const log = document.getElementById('send-log');
-  const fill = document.getElementById('progress-fill');
+  const log   = document.getElementById('send-log');
+  const fill  = document.getElementById('progress-fill');
   const label = document.getElementById('progress-label');
+  log.innerHTML = '';
 
   const addLog = (msg, color) => {
     const line = document.createElement('div');
@@ -672,28 +1123,23 @@ async function executeSend() {
   fill.style.width = '10%';
 
   try {
-    addLog('> Personalizing ' + contacts.length + ' emails…');
+    addLog('> Personalizing ' + sendContacts.length + ' emails…');
     fill.style.width = '25%';
 
-    if (!settings.sgKey) { addLog('> ✗ No Brevo key found. Go to Settings first.', '#f55'); document.getElementById('modal-footer').innerHTML = '<button class="btn btn-secondary" onclick="closeModal()">Close</button>'; return; }
     const payload = {
       from_name:  document.getElementById('from-name').value.trim(),
       from_email: document.getElementById('from-email').value.trim(),
       subject:    document.getElementById('subject-input').value,
       body:       document.getElementById('body-input').value,
-      contacts:   contacts,
+      contacts:   sendContacts,
       brevo_key:  settings.sgKey,
     };
 
-    const res = await fetch(apiBase + '/api/send', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
+    const res  = await fetch(apiBase + '/api/send', {
+      method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload)
     });
-
     fill.style.width = '80%';
     const data = await res.json();
-
     if (!res.ok) throw new Error(data.error || 'Server error');
 
     fill.style.width = '100%';
@@ -702,22 +1148,20 @@ async function executeSend() {
     label.textContent = '✓ Done! ' + data.sent + ' emails sent.';
     label.style.color = 'var(--green)';
 
-    // Save to history
-    const campaign = {
-      name: payload.subject,
-      recipients: contacts.length,
-      sent: data.sent,
-      failed: data.failed || 0,
-      date: new Date().toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' }),
-    };
-    campaigns.unshift(campaign);
+    campaigns.unshift({
+      name:       payload.subject,
+      mode:       currentMode,
+      recipients: sendContacts.length,
+      sent:       data.sent,
+      failed:     data.failed || 0,
+      date:       new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}),
+    });
     localStorage.setItem('mguru_campaigns', JSON.stringify(campaigns));
     renderHistory();
     updateStats();
 
     document.getElementById('modal-footer').innerHTML = '<button class="btn btn-primary" onclick="closeModal()">Done ✓</button>';
-
-  } catch (err) {
+  } catch(err) {
     addLog('> ✗ Error: ' + err.message, '#f55');
     label.textContent = 'Send failed';
     label.style.color = '#c0392b';
@@ -725,45 +1169,36 @@ async function executeSend() {
   }
 }
 
-// ── HISTORY & STATS ────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════════════
+// DASHBOARD
+// ═══════════════════════════════════════════════════════════════════════════
 function renderHistory() {
   const tbody = document.getElementById('history-table');
   if (!campaigns.length) {
-    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:28px;">No campaigns yet — compose your first one!</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:28px;">No campaigns yet!</td></tr>';
     return;
   }
   tbody.innerHTML = campaigns.map(c => `
     <tr>
-      <td><strong>${c.name}</strong></td>
+      <td><strong style="font-size:12px;">${c.name}</strong></td>
+      <td>${c.mode==='job'?'<span class="badge badge-job">💼 Job</span>':'<span class="badge badge-marketing">📣 Mkt</span>'}</td>
       <td>${c.recipients}</td>
       <td style="color:var(--green)">${c.sent}</td>
-      <td style="color:${c.failed ? '#c0392b' : 'var(--muted)'};">${c.failed || 0}</td>
-      <td style="color:var(--muted)">${c.date}</td>
+      <td style="color:${c.failed?'#c0392b':'var(--muted)'};">${c.failed||0}</td>
+      <td style="color:var(--muted);">${c.date}</td>
     </tr>`).join('');
 }
 
 function updateStats() {
   document.getElementById('stat-campaigns').textContent = campaigns.length;
-  document.getElementById('stat-emails').textContent    = campaigns.reduce((a, c) => a + c.sent, 0);
-  document.getElementById('stat-contacts').textContent  = contacts.length;
+  document.getElementById('stat-emails').textContent    = campaigns.reduce((a,c)=>a+c.sent,0);
+  document.getElementById('stat-contacts').textContent  = allContacts.length;
   document.getElementById('stat-last').textContent      = campaigns[0]?.date || '—';
 }
 
-// ── SAMPLE CSV ─────────────────────────────────────────────────────────────
-function downloadSampleCSV() {
-  const csv = `email,first_name,last_name,company,industry,city
-sarah@acmecorp.com,Sarah,Johnson,Acme Corp,Technology,Cairo
-m.rashid@venture.io,Mohammed,Al-Rashid,Venture IO,Finance,Dubai
-elena@techfund.vc,Elena,Petrov,TechFund VC,Investment,London
-yuki@innovate.jp,Yuki,Tanaka,Innovate JP,Manufacturing,Tokyo
-amira@startup.eg,Amira,Hassan,StartupEG,E-commerce,Cairo`;
-  const a = document.createElement('a');
-  a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
-  a.download = 'mguru_sample_contacts.csv';
-  a.click();
-}
-
-document.getElementById('send-modal').addEventListener('click', e => { if (e.target === document.getElementById('send-modal')) closeModal(); });
+document.getElementById('send-modal').addEventListener('click', e => {
+  if (e.target === document.getElementById('send-modal')) closeModal();
+});
 </script>
 </body>
 </html>
