@@ -1,5 +1,5 @@
 // mGuru — /api/send.js
-// Vercel serverless function — sends via Brevo with proper HTML email
+// Vercel serverless function — Brevo ile email gönderir
 
 const https = require('https');
 
@@ -38,40 +38,47 @@ function applyTags(text, c) {
     .replace(/\{\{city\}\}/gi,       c.city       || '');
 }
 
-// Proper HTML email template — clean, valid, spam-filter friendly
+// Temiz, resim içermeyen, metin ağırlıklı HTML şablonu
 function buildHtml(text, fromName) {
+  // Her paragrafı <p> tag'ine çevir
   const paragraphs = text
     .split(/\n\n+/)
     .map(p => p.trim())
     .filter(Boolean)
-    .map(p => `<p style="margin:0 0 16px 0;line-height:1.6;">${p.replace(/\n/g, '<br>')}</p>`)
+    .map(p => `<p style="margin:0 0 18px 0;line-height:1.7;color:#222222;">${p.replace(/\n/g, '<br>')}</p>`)
     .join('\n');
 
-  return `<!DOCTYPE html>
-<html lang="en">
+  // Tamamen resim içermeyen, saf metin tabanlı HTML
+  return `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Email</title>
 </head>
-<body style="margin:0;padding:0;background:#f5f5f5;font-family:Arial,Helvetica,sans-serif;">
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f5f5f5;padding:32px 0;">
+<body style="margin:0;padding:0;background-color:#f4f4f4;font-family:Arial,Helvetica,sans-serif;font-size:15px;">
+<table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color:#f4f4f4;">
   <tr>
-    <td align="center">
-      <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:4px;overflow:hidden;">
+    <td align="center" style="padding:32px 16px;">
+      <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="600" style="max-width:600px;width:100%;background-color:#ffffff;border-radius:4px;">
+
+        <!-- BODY -->
         <tr>
-          <td style="padding:32px 40px;font-size:15px;color:#222222;line-height:1.6;">
+          <td style="padding:36px 44px 24px 44px;">
             ${paragraphs}
           </td>
         </tr>
+
+        <!-- FOOTER -->
         <tr>
-          <td style="padding:16px 40px 24px;border-top:1px solid #eeeeee;">
-            <p style="margin:0;font-size:11px;color:#999999;line-height:1.5;">
-              You received this email because you are on ${fromName}'s contact list.<br>
-              To unsubscribe, reply with "unsubscribe" in the subject line.
+          <td style="padding:16px 44px 28px 44px;border-top:1px solid #eeeeee;">
+            <p style="margin:0;font-size:11px;color:#999999;line-height:1.6;">
+              Bu emaili aldınız çünkü ${fromName || 'sender'} iletişim listenizde bulunmaktadır.<br>
+              Abonelikten çıkmak için "unsubscribe" yazarak yanıtlayın.
             </p>
           </td>
         </tr>
+
       </table>
     </td>
   </tr>
@@ -92,12 +99,12 @@ module.exports = async (req, res) => {
   const { from_name, from_email, subject, body, contacts, brevo_key } = req.body;
   const apiKey = brevo_key || process.env.BREVO_API_KEY;
 
-  if (!apiKey)            return res.status(400).json({ error: 'No Brevo API key provided' });
-  if (!from_email)        return res.status(400).json({ error: 'from_email is required' });
-  if (!subject)           return res.status(400).json({ error: 'subject is required' });
-  if (!body)              return res.status(400).json({ error: 'body is required' });
-  if (!contacts?.length)  return res.status(400).json({ error: 'No contacts provided' });
-  if (contacts.length > 300) return res.status(400).json({ error: 'Max 300 per send (Brevo free limit)' });
+  if (!apiKey)           return res.status(400).json({ error: 'Brevo API key yok' });
+  if (!from_email)       return res.status(400).json({ error: 'from_email gerekli' });
+  if (!subject)          return res.status(400).json({ error: 'subject gerekli' });
+  if (!body)             return res.status(400).json({ error: 'body gerekli' });
+  if (!contacts?.length) return res.status(400).json({ error: 'Contact yok' });
+  if (contacts.length > 300) return res.status(400).json({ error: 'Max 300 (Brevo free limit)' });
 
   const results = { sent: 0, failed: 0, details: [] };
 
@@ -109,11 +116,11 @@ module.exports = async (req, res) => {
       sender: { name: from_name || 'mGuru', email: from_email },
       to: [{
         email: contact.email,
-        name: `${contact.first_name || ''} ${contact.last_name || ''}`.trim() || contact.email,
+        name:  `${contact.first_name || ''} ${contact.last_name || ''}`.trim() || contact.email,
       }],
-      subject: personalizedSubject,
-      textContent: personalizedBody,                        // plain text version
-      htmlContent: buildHtml(personalizedBody, from_name || from_email), // proper HTML
+      subject:     personalizedSubject,
+      textContent: personalizedBody,                            // plain text — spam filtresi bunu seviyor
+      htmlContent: buildHtml(personalizedBody, from_name),      // temiz HTML
     };
 
     try {
@@ -124,11 +131,7 @@ module.exports = async (req, res) => {
       } else {
         const errBody = JSON.parse(result.body || '{}');
         results.failed++;
-        results.details.push({
-          email: contact.email,
-          status: 'failed',
-          reason: errBody.message || `HTTP ${result.status}`,
-        });
+        results.details.push({ email: contact.email, status: 'failed', reason: errBody.message || `HTTP ${result.status}` });
       }
     } catch (err) {
       results.failed++;
